@@ -1,0 +1,1878 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Livraria Dedezeetos | Sua Próxima História Começa Aqui</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#fdf8f5',
+                            100: '#f7ebe5',
+                            200: '#edd2c7',
+                            300: '#dea894',
+                            400: '#cc7960',
+                            500: '#b8543b',
+                            600: '#a33f2a',
+                            700: '#88301f',
+                            800: '#712b1d',
+                            900: '#5c271c',
+                            burgundy: '#4a151b',
+                            gold: '#d4af37',
+                            paper: '#f8f4ee',
+                            paperDark: '#1a1615',
+                            cardDark: '#26201e'
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['Playfair Display', 'Georgia', 'serif'],
+                        sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Canvas Confetti for Checkout Success -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.05);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d4af37;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #b8543b;
+        }
+        
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Reading theme modes */
+        .reader-theme-sepia {
+            background-color: #f4ecd8 !important;
+            color: #5b4636 !important;
+        }
+        .reader-theme-dark {
+            background-color: #1a1a1a !important;
+            color: #d1d5db !important;
+        }
+        .reader-theme-light {
+            background-color: #ffffff !important;
+            color: #111827 !important;
+        }
+
+        /* 3D Book Hover Effect */
+        .book-card {
+            perspective: 1000px;
+        }
+        .book-cover-wrapper {
+            transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s ease;
+            transform-style: preserve-3d;
+        }
+        .book-card:hover .book-cover-wrapper {
+            transform: translateY(-8px) rotateY(-8px);
+            box-shadow: -12px 16px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Card Flip effect for credit card preview */
+        .credit-card-inner {
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        .credit-card-flipped {
+            transform: rotateY(180deg);
+        }
+        .credit-card-front, .credit-card-back {
+            backface-visibility: hidden;
+        }
+        .credit-card-back {
+            transform: rotateY(180deg);
+        }
+
+        @keyframes pulse-subtle {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+        .animate-pulse-subtle {
+            animation: pulse-subtle 3s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-brand-paper dark:bg-brand-paperDark text-slate-800 dark:text-slate-100 font-sans min-h-screen flex flex-col transition-colors duration-300">
+
+    <!-- Top Announcement Bar -->
+    <div id="announcementBar" class="bg-brand-burgundy text-brand-100 text-xs py-2 px-4 flex justify-between items-center z-50 border-b border-brand-gold/30">
+        <div class="max-w-7xl mx-auto w-full flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <span class="bg-brand-gold/20 text-brand-gold px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider">Lançamento</span>
+                <span class="truncate">Use o cupom <strong class="text-brand-gold">DEDEZEETOS20</strong> para 20% OFF em todo o site!</span>
+            </div>
+            <div class="hidden sm:flex items-center gap-6 text-[11px]">
+                <button onclick="toggleAudio()" id="audioToggleBtn" class="hover:text-brand-gold flex items-center gap-1 transition-colors">
+                    <i class="fa-solid fa-volume-high"></i> <span id="audioStateText">Sons: On</span>
+                </button>
+                <a href="#clube" class="hover:text-brand-gold flex items-center gap-1 transition-colors">
+                    <i class="fa-solid fa-box-open text-brand-gold"></i> Clube de Assinatura
+                </a>
+                <a href="#atendimento" class="hover:text-brand-gold flex items-center gap-1 transition-colors">
+                    <i class="fa-solid fa-headset text-brand-gold"></i> Suporte 24h
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Navigation Header -->
+    <header class="sticky top-0 z-40 bg-brand-paper/90 dark:bg-brand-paperDark/90 backdrop-blur-md border-b border-stone-200 dark:border-stone-800 transition-colors">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20 gap-4">
+                
+                <!-- Brand Logo -->
+                <a href="#" class="flex items-center gap-3 group">
+                    <div class="w-11 h-11 rounded-xl bg-brand-burgundy border border-brand-gold/40 flex items-center justify-center text-brand-gold shadow-md group-hover:scale-105 transition-all duration-300">
+                        <i class="fa-solid fa-book-journal-whills text-2xl"></i>
+                    </div>
+                    <div>
+                        <span class="text-2xl font-bold tracking-tight text-brand-burgundy dark:text-brand-gold block font-serif leading-none">DEDEZEETOS</span>
+                        <span class="text-[10px] tracking-widest text-stone-500 dark:text-stone-400 uppercase font-bold">Livraria & Experiência</span>
+                    </div>
+                </a>
+
+                <!-- Instant Search Bar -->
+                <div class="hidden md:flex flex-1 max-w-lg mx-6 relative">
+                    <div class="relative w-full">
+                        <input type="text" id="searchInput" placeholder="Busque por título, autor, gênero ou palavra-chave..." 
+                            class="w-full pl-10 pr-10 py-2.5 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 text-sm focus:outline-none focus:ring-2 focus:ring-brand-gold transition-all shadow-inner dark:text-white">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-stone-400"></i>
+                        <button id="clearSearchBtn" onclick="clearSearch()" class="hidden absolute right-3 top-2.5 text-stone-400 hover:text-stone-600 dark:hover:text-white">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+
+                    <!-- Search Suggestions Dropdown -->
+                    <div id="searchSuggestions" class="hidden absolute top-full left-0 right-0 mt-2 bg-white dark:bg-stone-900 rounded-2xl shadow-2xl border border-stone-200 dark:border-stone-800 overflow-hidden z-50 max-h-96 overflow-y-auto">
+                        <!-- Search items dynamically injected -->
+                    </div>
+                </div>
+
+                <!-- Right Header Controls -->
+                <div class="flex items-center gap-3 sm:gap-4">
+                    
+                    <!-- Dark/Light Theme Toggle -->
+                    <button onclick="toggleDarkMode()" class="p-2.5 text-stone-600 dark:text-stone-300 hover:text-brand-gold rounded-xl hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors" title="Alternar Tema">
+                        <i class="fa-solid fa-moon dark:hidden text-lg"></i>
+                        <i class="fa-solid fa-sun hidden dark:block text-lg text-amber-400"></i>
+                    </button>
+
+                    <!-- Wishlist Button -->
+                    <button onclick="toggleWishlistModal(true)" class="relative p-2.5 text-stone-600 dark:text-stone-300 hover:text-brand-burgundy dark:hover:text-brand-gold rounded-xl hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors" title="Lista de Desejos">
+                        <i class="fa-solid fa-heart text-lg"></i>
+                        <span id="wishlistBadge" class="absolute -top-1 -right-1 bg-red-600 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center hidden">0</span>
+                    </button>
+
+                    <!-- Shopping Cart Button -->
+                    <button onclick="toggleCartDrawer(true)" class="relative p-2.5 text-stone-600 dark:text-stone-300 hover:text-brand-burgundy dark:hover:text-brand-gold rounded-xl hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors" title="Carrinho">
+                        <i class="fa-solid fa-bag-shopping text-xl"></i>
+                        <span id="cartBadge" class="absolute -top-1 -right-1 bg-brand-burgundy text-brand-gold text-[11px] font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white dark:border-stone-900 shadow-md">0</span>
+                    </button>
+
+                    <!-- Quiz Profile CTA -->
+                    <button onclick="openQuizModal()" class="hidden lg:flex items-center gap-2 px-3.5 py-2 rounded-xl bg-brand-gold/10 text-brand-burgundy dark:text-brand-gold font-semibold text-xs border border-brand-gold/30 hover:bg-brand-gold hover:text-brand-burgundy transition-all">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> Quiz Leitor
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile Search Bar -->
+            <div class="md:hidden pb-4">
+                <div class="relative">
+                    <input type="text" id="mobileSearchInput" placeholder="Buscar em mais de 30 livros..." 
+                        class="w-full pl-10 pr-4 py-2 rounded-xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 text-sm focus:outline-none focus:ring-2 focus:ring-brand-gold dark:text-white">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-stone-400"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Slider / Spotlight Banner -->
+    <section class="relative bg-gradient-to-b from-brand-paper via-brand-100/40 to-brand-paper dark:from-brand-paperDark dark:via-stone-900 dark:to-brand-paperDark py-10 lg:py-16 overflow-hidden border-b border-stone-200 dark:border-stone-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                
+                <!-- Hero Left Info -->
+                <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-burgundy text-brand-gold text-xs font-bold tracking-widest uppercase shadow-sm">
+                        <i class="fa-solid fa-crown"></i> Destaque da Temporada
+                    </div>
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-brand-burgundy dark:text-white leading-tight font-serif">
+                        Descubra Universos que <span class="italic text-brand-gold underline decoration-brand-gold/40">permanecem</span> em você.
+                    </h1>
+                    <p class="text-base sm:text-lg text-stone-600 dark:text-stone-300 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+                        Curadoria literária de alta precisão. Leia degustações gratuitas dos capítulos iniciais, participe do nosso clube de caixa surpresa e monte sua biblioteca dos sonhos.
+                    </p>
+                    
+                    <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
+                        <a href="#catalogo" class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-brand-burgundy hover:bg-brand-800 text-white font-bold shadow-xl shadow-brand-burgundy/20 hover:scale-105 transition-all text-center flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-compass"></i> Explorar 30+ Livros
+                        </a>
+                        <button onclick="openQuizModal()" class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-white dark:bg-stone-900 border border-brand-gold/40 text-brand-burgundy dark:text-brand-gold hover:bg-brand-gold/10 font-bold transition-all text-center flex items-center justify-center gap-2 shadow-sm">
+                            <i class="fa-solid fa-lightbulb text-brand-gold"></i> Descobrir Meu Estilo
+                        </button>
+                    </div>
+
+                    <!-- Quick Stats -->
+                    <div class="pt-8 grid grid-cols-3 gap-4 border-t border-stone-300 dark:border-stone-800 max-w-xl mx-auto lg:mx-0 text-center lg:text-left">
+                        <div>
+                            <span class="block text-2xl font-extrabold text-brand-burgundy dark:text-brand-gold font-serif">30+</span>
+                            <span class="text-xs text-stone-500 dark:text-stone-400 font-medium">Títulos Curados</span>
+                        </div>
+                        <div>
+                            <span class="block text-2xl font-extrabold text-brand-burgundy dark:text-brand-gold font-serif">100%</span>
+                            <span class="text-xs text-stone-500 dark:text-stone-400 font-medium">Amostra Grátis</span>
+                        </div>
+                        <div>
+                            <span class="block text-2xl font-extrabold text-brand-burgundy dark:text-brand-gold font-serif">4.9 ★</span>
+                            <span class="text-xs text-stone-500 dark:text-stone-400 font-medium">Sat. Leitores</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hero Right Book Feature Carousel -->
+                <div class="lg:col-span-5 relative">
+                    <div id="heroCarouselCard" class="relative bg-white dark:bg-stone-900 rounded-3xl p-6 shadow-2xl border border-stone-200 dark:border-stone-800 transition-all duration-500">
+                        <!-- Injected dynamically via JS -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Catalog Section -->
+    <main id="catalogo" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex-1">
+        
+        <!-- Filter Header -->
+        <div class="space-y-6 pb-8 border-b border-stone-200 dark:border-stone-800">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                <div>
+                    <span class="text-xs uppercase tracking-widest text-brand-gold font-bold">Biblioteca Dedezeetos</span>
+                    <h2 class="text-3xl sm:text-4xl font-bold text-brand-burgundy dark:text-white font-serif mt-1">Acervo Selecionado</h2>
+                </div>
+
+                <!-- Sorting and Active Count -->
+                <div class="flex flex-wrap items-center gap-3">
+                    <span id="resultsCount" class="text-xs text-stone-500 dark:text-stone-400 font-medium bg-stone-100 dark:bg-stone-800 px-3 py-1.5 rounded-lg">Exibindo 30 livros</span>
+                    
+                    <select id="sortSelect" onchange="applyFilters()" class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 text-xs rounded-xl p-2.5 focus:ring-2 focus:ring-brand-gold text-stone-800 dark:text-stone-200 font-semibold shadow-sm">
+                        <option value="popular">Mais Populares</option>
+                        <option value="rating">Melhor Avaliados ★</option>
+                        <option value="price-asc">Menor Preço</option>
+                        <option value="price-desc">Maior Preço</option>
+                        <option value="title-asc">Título (A-Z)</option>
+                    </select>
+
+                    <select id="ratingFilter" onchange="applyFilters()" class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 text-xs rounded-xl p-2.5 focus:ring-2 focus:ring-brand-gold text-stone-800 dark:text-stone-200 font-semibold shadow-sm">
+                        <option value="all">Todas as Avaliações</option>
+                        <option value="4.8">Apenas 4.8+ ★</option>
+                        <option value="4.5">Apenas 4.5+ ★</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Categories Horizontal Scroll Pills -->
+            <div class="flex items-center gap-2 overflow-x-auto py-2 no-scrollbar" id="categoryContainer">
+                <!-- Dynamic Category Buttons -->
+            </div>
+        </div>
+
+        <!-- Books Grid -->
+        <div id="booksGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8 pt-8">
+            <!-- Dynamically Rendered 30+ Books -->
+        </div>
+
+        <!-- Empty State -->
+        <div id="emptyState" class="hidden text-center py-20 space-y-4">
+            <div class="w-20 h-20 bg-brand-gold/10 text-brand-gold rounded-full flex items-center justify-center mx-auto text-3xl">
+                <i class="fa-solid fa-book-open"></i>
+            </div>
+            <h3 class="text-2xl font-bold font-serif text-brand-burgundy dark:text-white">Nenhum livro encontrado</h3>
+            <p class="text-sm text-stone-500 dark:text-stone-400 max-w-sm mx-auto">Tente buscar por outro termo ou ajuste seus filtros de categoria e avaliação.</p>
+            <button onclick="resetFilters()" class="px-6 py-2.5 bg-brand-burgundy text-white rounded-xl text-xs font-bold hover:bg-brand-800 transition-colors shadow-md">
+                Resetar Filtros
+            </button>
+        </div>
+    </main>
+
+    <!-- Interactive Book Club Section -->
+    <section id="clube" class="bg-stone-900 text-white py-16 lg:py-24 relative overflow-hidden my-12 border-y border-brand-gold/20">
+        <div class="absolute -right-10 -bottom-10 opacity-5 text-brand-gold pointer-events-none">
+            <i class="fa-solid fa-box-open text-[400px]"></i>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                
+                <div class="lg:col-span-6 space-y-6">
+                    <span class="text-xs font-bold text-brand-gold uppercase tracking-widest px-3 py-1 bg-brand-gold/10 rounded-full border border-brand-gold/30">Experiência por Assinatura</span>
+                    <h2 class="text-3xl sm:text-5xl font-serif font-bold text-white leading-tight">
+                        Assine o <span class="text-brand-gold italic">Clube Dedezeetos Box</span>
+                    </h2>
+                    <p class="text-stone-300 text-sm sm:text-base leading-relaxed">
+                        Receba mensalmente uma caixa temática em capa dura com itens exclusivos de papelaria, marca-páginas artesanais, guia de leitura e uma surpresa especial do curador.
+                    </p>
+
+                    <!-- Subscription Plan Selector -->
+                    <div class="grid grid-cols-3 gap-3 pt-2">
+                        <div onclick="selectPlan('mensal')" id="plan-mensal" class="cursor-pointer border-2 border-brand-gold bg-brand-gold/10 p-4 rounded-2xl text-center transition-all hover:scale-105">
+                            <span class="text-[10px] uppercase font-bold text-brand-gold block">Mensal</span>
+                            <span class="text-xl font-bold font-serif">R$ 59,90</span>
+                            <span class="text-[10px] text-stone-400 block mt-1">Cancelamento grátis</span>
+                        </div>
+                        <div onclick="selectPlan('trimestral')" id="plan-trimestral" class="cursor-pointer border border-stone-700 bg-stone-800/60 p-4 rounded-2xl text-center transition-all hover:scale-105">
+                            <span class="text-[10px] uppercase font-bold text-stone-400 block">Trimestral</span>
+                            <span class="text-xl font-bold font-serif">R$ 54,90</span>
+                            <span class="text-[10px] text-emerald-400 block mt-1">Economize 8%</span>
+                        </div>
+                        <div onclick="selectPlan('anual')" id="plan-anual" class="cursor-pointer border border-stone-700 bg-stone-800/60 p-4 rounded-2xl text-center transition-all hover:scale-105">
+                            <span class="text-[10px] uppercase font-bold text-stone-400 block">Anual</span>
+                            <span class="text-xl font-bold font-serif">R$ 49,90</span>
+                            <span class="text-[10px] text-emerald-400 block mt-1">Frete Grátis</span>
+                        </div>
+                    </div>
+
+                    <button onclick="subscribeClub()" class="w-full sm:w-auto px-8 py-4 bg-brand-gold hover:bg-yellow-500 text-stone-900 font-bold rounded-2xl transition-all shadow-lg flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-gift"></i> Assinar Box Selecionada
+                    </button>
+                </div>
+
+                <div class="lg:col-span-6 flex justify-center">
+                    <div class="relative w-full max-w-md bg-stone-800 p-8 rounded-3xl border border-stone-700 shadow-2xl text-center space-y-4">
+                        <div class="w-20 h-20 bg-brand-gold/20 text-brand-gold rounded-full flex items-center justify-center mx-auto text-3xl">
+                            <i class="fa-solid fa-cube"></i>
+                        </div>
+                        <h3 class="text-xl font-bold font-serif text-white">Box deste Mês: "Segredos Astecas"</h3>
+                        <p class="text-xs text-stone-400 leading-relaxed">
+                            Inclui 1 Livro Capa Dura Exclusivo + 1 Vela Aromática de Canela + 2 Marca-páginas de Metal + Guia do Leitor.
+                        </p>
+                        <div class="inline-block bg-brand-burgundy/80 px-4 py-2 rounded-xl text-xs text-brand-gold font-bold">
+                            Envios a partir do dia 10 do próximo mês
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal: Sample Book Reader ("Leia uma Amostra") -->
+    <div id="readerModal" class="fixed inset-0 z-50 bg-black/80 opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center p-2 sm:p-4 backdrop-blur-sm">
+        <div class="bg-white dark:bg-stone-900 rounded-3xl max-w-4xl w-full h-[90vh] flex flex-col overflow-hidden shadow-2xl border border-stone-200 dark:border-stone-800 transition-all transform scale-95" id="readerContentBox">
+            
+            <!-- Reader Top Bar -->
+            <div class="p-4 bg-stone-100 dark:bg-stone-800/80 border-b border-stone-200 dark:border-stone-700 flex flex-wrap items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                    <button onclick="closeReaderModal()" class="w-9 h-9 rounded-full bg-white dark:bg-stone-700 flex items-center justify-center text-stone-700 dark:text-stone-200 hover:bg-stone-200">
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </button>
+                    <div>
+                        <h4 id="readerTitle" class="font-serif font-bold text-sm sm:text-base text-stone-900 dark:text-white truncate max-w-xs">Título do Livro</h4>
+                        <span id="readerAuthor" class="text-[11px] text-stone-500 dark:text-stone-400">Autor</span>
+                    </div>
+                </div>
+
+                <!-- Reader Customization Controls -->
+                <div class="flex items-center gap-2">
+                    <div class="flex items-center bg-white dark:bg-stone-700 rounded-xl p-1 border border-stone-200 dark:border-stone-600 text-xs">
+                        <button onclick="changeFontSize(-1)" class="px-2 py-1 hover:bg-stone-100 dark:hover:bg-stone-600 rounded">A-</button>
+                        <span id="fontSizeDisplay" class="px-2 text-[11px] font-semibold">16px</span>
+                        <button onclick="changeFontSize(1)" class="px-2 py-1 hover:bg-stone-100 dark:hover:bg-stone-600 rounded">A+</button>
+                    </div>
+
+                    <!-- Reader Theme Toggles -->
+                    <div class="flex items-center bg-white dark:bg-stone-700 rounded-xl p-1 border border-stone-200 dark:border-stone-600">
+                        <button onclick="setReaderTheme('light')" class="w-6 h-6 rounded bg-white text-stone-900 font-bold text-xs shadow-sm" title="Tema Claro">A</button>
+                        <button onclick="setReaderTheme('sepia')" class="w-6 h-6 rounded bg-[#f4ecd8] text-[#5b4636] font-bold text-xs" title="Tema Sépia">A</button>
+                        <button onclick="setReaderTheme('dark')" class="w-6 h-6 rounded bg-stone-900 text-white font-bold text-xs" title="Tema Escuro">A</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reader Main Text Scroll Area -->
+            <div id="readerBody" class="flex-1 overflow-y-auto p-6 sm:p-12 reader-theme-sepia transition-colors duration-300 font-serif leading-relaxed">
+                <!-- Sample Chapters Injected Dynamic -->
+            </div>
+
+            <!-- Reader Footer -->
+            <div class="p-4 bg-stone-100 dark:bg-stone-800/80 border-t border-stone-200 dark:border-stone-700 flex justify-between items-center text-xs">
+                <span class="text-stone-500 dark:text-stone-400">Degustação Limitada • Capítulos 1 e 2</span>
+                <button id="readerAddToCartBtn" class="px-5 py-2.5 bg-brand-burgundy hover:bg-brand-800 text-white font-bold rounded-xl shadow-md transition-colors flex items-center gap-2">
+                    <i class="fa-solid fa-cart-plus"></i> Comprar Livro Completo
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Quick View & Review System -->
+    <div id="quickViewModal" class="fixed inset-0 z-50 bg-black/70 opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center p-3 sm:p-6 backdrop-blur-sm">
+        <div class="bg-white dark:bg-stone-900 rounded-3xl max-w-3xl w-full max-h-[92vh] overflow-y-auto shadow-2xl border border-stone-200 dark:border-stone-800 relative transition-transform transform scale-95" id="qvContentBox">
+            
+            <button onclick="closeQuickView()" class="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 flex items-center justify-center hover:bg-stone-200">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-6 p-6 sm:p-8">
+                
+                <!-- Left Cover Artwork -->
+                <div class="md:col-span-5 flex flex-col items-center justify-start gap-4">
+                    <div id="qvCoverContainer" class="w-48 sm:w-56 aspect-[3/4] rounded-2xl shadow-xl overflow-hidden">
+                        <!-- Dynamic SVG/Image Cover -->
+                    </div>
+
+                    <button id="qvSampleBtn" class="w-full py-2.5 px-4 rounded-xl border border-brand-gold text-brand-burgundy dark:text-brand-gold font-bold text-xs hover:bg-brand-gold/10 transition-colors flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-book-open"></i> Degustar Amostra
+                    </button>
+                </div>
+
+                <!-- Right Details -->
+                <div class="md:col-span-7 space-y-4">
+                    <div>
+                        <span id="qvCategory" class="text-[10px] font-bold uppercase tracking-wider text-brand-gold px-2.5 py-1 bg-brand-gold/10 rounded-full">Categoria</span>
+                        <h3 id="qvTitle" class="text-2xl font-bold font-serif text-brand-burgundy dark:text-white mt-2">Título do Livro</h3>
+                        <p id="qvAuthor" class="text-xs text-stone-500 dark:text-stone-400 font-semibold">Por Autor</p>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <div id="qvStars" class="flex text-amber-400 text-xs"></div>
+                        <span id="qvRatingText" class="text-xs text-stone-600 dark:text-stone-300 font-bold">4.8 (120 avaliações)</span>
+                    </div>
+
+                    <p id="qvSynopsis" class="text-xs text-stone-600 dark:text-stone-300 leading-relaxed">
+                        Sinopse do livro...
+                    </p>
+
+                    <!-- Tech specs -->
+                    <div class="grid grid-cols-2 gap-2 text-[11px] bg-stone-100 dark:bg-stone-800 p-3 rounded-xl">
+                        <div><span class="text-stone-400">Páginas:</span> <strong id="qvPages" class="dark:text-white">320</strong></div>
+                        <div><span class="text-stone-400">Editora:</span> <strong id="qvPublisher" class="dark:text-white">Dedezeetos</strong></div>
+                        <div><span class="text-stone-400">Ano:</span> <strong id="qvYear" class="dark:text-white">2024</strong></div>
+                        <div><span class="text-stone-400">ISBN:</span> <strong id="qvIsbn" class="dark:text-white">978-000000</strong></div>
+                    </div>
+
+                    <!-- Price & Add -->
+                    <div class="flex items-center justify-between border-t border-stone-200 dark:border-stone-800 pt-4">
+                        <div>
+                            <span id="qvOldPrice" class="text-xs text-stone-400 line-through block">R$ 59,90</span>
+                            <span id="qvPrice" class="text-2xl font-bold font-serif text-brand-burgundy dark:text-brand-gold">R$ 44,90</span>
+                        </div>
+                        <button id="qvAddToCartBtn" class="px-6 py-3 bg-brand-burgundy hover:bg-brand-800 text-white font-bold rounded-2xl text-xs transition-colors shadow-lg flex items-center gap-2">
+                            <i class="fa-solid fa-cart-plus"></i> Adicionar ao Carrinho
+                        </button>
+                    </div>
+
+                    <!-- Reader Reviews Section -->
+                    <div class="pt-6 border-t border-stone-200 dark:border-stone-800 space-y-3">
+                        <h4 class="font-serif font-bold text-sm text-stone-900 dark:text-white flex items-center justify-between">
+                            <span>Avaliações dos Leitores</span>
+                            <button onclick="toggleReviewForm()" class="text-xs text-brand-gold hover:underline">Deixar Avaliação</button>
+                        </h4>
+
+                        <!-- Add Review Inline Form -->
+                        <form id="addReviewForm" onsubmit="submitReview(event)" class="hidden bg-stone-50 dark:bg-stone-800 p-3 rounded-xl space-y-2">
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs font-semibold">Sua nota:</span>
+                                <select id="reviewRatingInput" class="text-xs p-1 rounded bg-white dark:bg-stone-700 dark:text-white">
+                                    <option value="5">5 estrelas ★★★★★</option>
+                                    <option value="4">4 estrelas ★★★★</option>
+                                    <option value="3">3 estrelas ★★★</option>
+                                </select>
+                            </div>
+                            <input type="text" id="reviewAuthorInput" required placeholder="Seu nome" class="w-full text-xs p-2 rounded border border-stone-200 dark:border-stone-700 dark:bg-stone-900 dark:text-white">
+                            <textarea id="reviewTextInput" required placeholder="O que achou desta leitura?" class="w-full text-xs p-2 rounded border border-stone-200 dark:border-stone-700 dark:bg-stone-900 dark:text-white" rows="2"></textarea>
+                            <button type="submit" class="px-3 py-1 bg-brand-gold text-stone-900 font-bold text-xs rounded">Publicar</button>
+                        </form>
+
+                        <div id="qvReviewsList" class="space-y-2 max-h-40 overflow-y-auto pr-1">
+                            <!-- Dynamic Reviews -->
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Wishlist Drawer Modal -->
+    <div id="wishlistModal" class="fixed inset-0 z-50 bg-black/60 opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-stone-900 rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-stone-200 dark:border-stone-800 space-y-4">
+            <div class="flex justify-between items-center border-b border-stone-200 dark:border-stone-800 pb-3">
+                <h3 class="font-serif font-bold text-lg text-brand-burgundy dark:text-brand-gold flex items-center gap-2">
+                    <i class="fa-solid fa-heart text-red-500"></i> Sua Lista de Desejos
+                </h3>
+                <button onclick="toggleWishlistModal(false)" class="text-stone-400 hover:text-stone-600">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div id="wishlistItemsContainer" class="max-h-80 overflow-y-auto space-y-3">
+                <!-- Wishlist items dynamically injected -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Shopping Cart Drawer Overlay & Side Panel -->
+    <div id="cartOverlay" onclick="toggleCartDrawer(false)" class="fixed inset-0 bg-black/50 z-50 opacity-0 pointer-events-none transition-opacity duration-300"></div>
+
+    <aside id="cartDrawer" class="fixed top-0 right-0 h-full w-full sm:w-96 bg-white dark:bg-stone-900 z-50 transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col shadow-2xl">
+        
+        <!-- Drawer Header -->
+        <div class="p-4 bg-brand-paper dark:bg-stone-800 border-b border-stone-200 dark:border-stone-700 flex items-center justify-between">
+            <div class="flex items-center gap-2 text-brand-burgundy dark:text-brand-gold font-serif font-bold text-lg">
+                <i class="fa-solid fa-bag-shopping"></i>
+                <span>Carrinho de Leitura</span>
+            </div>
+            <button onclick="toggleCartDrawer(false)" class="p-2 text-stone-500 hover:text-stone-800 dark:text-stone-300">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+        </div>
+
+        <!-- Progress to Free Shipping -->
+        <div class="p-3 bg-brand-gold/10 border-b border-brand-gold/20 text-xs">
+            <div class="flex justify-between font-semibold text-stone-800 dark:text-stone-200 mb-1">
+                <span id="freeShippingText">Faltam R$ 150,00 para Frete Grátis</span>
+                <span id="freeShippingPct">0%</span>
+            </div>
+            <div class="w-full h-2 bg-stone-200 dark:bg-stone-700 rounded-full overflow-hidden">
+                <div id="freeShippingBar" class="h-full bg-brand-gold transition-all duration-500" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <!-- Cart Items List -->
+        <div id="cartItemsContainer" class="flex-1 overflow-y-auto p-4 space-y-3">
+            <!-- Dynamic Cart Items -->
+        </div>
+
+        <div id="cartEmptyState" class="flex-1 flex flex-col items-center justify-center p-6 text-center space-y-3">
+            <i class="fa-solid fa-basket-shopping text-5xl text-stone-300 dark:text-stone-700"></i>
+            <h4 class="font-serif font-bold text-stone-700 dark:text-stone-300">Seu carrinho está num hiato</h4>
+            <p class="text-xs text-stone-500">Adicione suas degustações favoritas para continuar sua jornada.</p>
+        </div>
+
+        <!-- Drawer Footer -->
+        <div id="cartFooter" class="p-4 bg-brand-paper dark:bg-stone-800 border-t border-stone-200 dark:border-stone-700 space-y-3">
+            
+            <!-- Coupon Input -->
+            <div class="flex gap-2">
+                <input type="text" id="couponInput" placeholder="Cupom (ex: Dedezeetos20)" uppercase class="flex-1 px-3 py-1.5 rounded-xl border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-900 text-xs focus:ring-1 focus:ring-brand-gold uppercase dark:text-white">
+                <button onclick="applyCoupon()" class="px-3 py-1.5 bg-stone-800 text-brand-gold font-bold text-xs rounded-xl hover:bg-stone-900">Aplicar</button>
+            </div>
+
+            <!-- Price Breakdown -->
+            <div class="space-y-1 text-xs border-t border-stone-200 dark:border-stone-700 pt-2 text-stone-600 dark:text-stone-300">
+                <div class="flex justify-between">
+                    <span>Subtotal</span>
+                    <span id="subtotalText">R$ 0,00</span>
+                </div>
+                <div id="discountRow" class="flex justify-between text-emerald-600 font-semibold hidden">
+                    <span>Desconto Cupom</span>
+                    <span id="discountText">- R$ 0,00</span>
+                </div>
+                <div class="flex justify-between">
+                    <span>Frete</span>
+                    <span id="shippingText">A calcular</span>
+                </div>
+                <div class="flex justify-between text-base font-bold text-brand-burgundy dark:text-brand-gold pt-1">
+                    <span>Total</span>
+                    <span id="totalText">R$ 0,00</span>
+                </div>
+            </div>
+
+            <button onclick="openCheckoutModal()" class="w-full py-3.5 bg-brand-burgundy hover:bg-brand-800 text-white font-bold rounded-2xl shadow-xl transition-all flex items-center justify-center gap-2 text-sm">
+                <span>Avançar para Checkout</span>
+                <i class="fa-solid fa-arrow-right"></i>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Checkout Multi-Step Modal -->
+    <div id="checkoutModal" class="fixed inset-0 z-50 bg-black/80 opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center p-3 sm:p-6 backdrop-blur-sm">
+        <div class="bg-white dark:bg-stone-900 rounded-3xl max-w-2xl w-full max-h-[92vh] overflow-y-auto p-6 sm:p-8 shadow-2xl border border-stone-200 dark:border-stone-800 relative">
+            
+            <button onclick="closeCheckoutModal()" class="absolute top-4 right-4 text-stone-400 hover:text-stone-700">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+
+            <!-- Checkout Wizard Header -->
+            <div class="mb-6">
+                <h3 class="text-2xl font-bold font-serif text-brand-burgundy dark:text-brand-gold">Finalizar Pedido</h3>
+                
+                <!-- Step Indicator -->
+                <div class="flex justify-between items-center mt-4 border-b border-stone-200 dark:border-stone-800 pb-3 text-xs font-bold text-stone-400">
+                    <span id="stepTab1" class="text-brand-burgundy dark:text-brand-gold border-b-2 border-brand-burgundy dark:border-brand-gold pb-1">1. Identificação</span>
+                    <span id="stepTab2" class="pb-1">2. Endereço</span>
+                    <span id="stepTab3" class="pb-1">3. Pagamento</span>
+                </div>
+            </div>
+
+            <form id="checkoutForm" onsubmit="event.preventDefault();">
+                
+                <!-- Step 1: Personal Data -->
+                <div id="checkoutStep1" class="space-y-4">
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-brand-gold">Seus Dados Principais</h4>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <input type="text" id="chkName" required placeholder="Nome Completo" class="px-3.5 py-2.5 rounded-xl border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-xs focus:ring-2 focus:ring-brand-gold dark:text-white">
+                        <input type="email" id="chkEmail" required placeholder="E-mail principal" class="px-3.5 py-2.5 rounded-xl border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-xs focus:ring-2 focus:ring-brand-gold dark:text-white">
+                        <input type="text" id="chkCpf" required placeholder="CPF (000.000.000-00)" class="px-3.5 py-2.5 rounded-xl border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-xs focus:ring-2 focus:ring-brand-gold dark:text-white">
+                        <input type="tel" id="chkPhone" required placeholder="Telefone / WhatsApp" class="px-3.5 py-2.5 rounded-xl border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-xs focus:ring-2 focus:ring-brand-gold dark:text-white">
+                    </div>
+                    <button type="button" onclick="goToStep(2)" class="w-full py-3 bg-brand-burgundy text-white font-bold rounded-xl text-xs hover:bg-brand-800 transition-colors">
+                        Continuar para Endereço <i class="fa-solid fa-arrow-right ml-1"></i>
+                    </button>
+                </div>
+
+                <!-- Step 2: Address & Freight -->
+                <div id="checkoutStep2" class="space-y-4 hidden">
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-brand-gold">Endereço de Entrega</h4>
+                    <div class="grid grid-cols-3 gap-3">
+                        <input type="text" id="chkCep" required placeholder="CEP" class="px-3.5 py-2.5 rounded-xl border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-xs focus:ring-2 focus:ring-brand-gold dark:text-white">
+                        <input type="text" id="chkStreet" required placeholder="Rua / Avenida" class="col-span-2 px-3.5 py-2.5 rounded-xl border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-xs focus:ring-2 focus:ring-brand-gold dark:text-white">
+                    </div>
+                    <div class="grid grid-cols-3 gap-3">
+                        <input type="text" id="chkNum" required placeholder="Número" class="px-3.5 py-2.5 rounded-xl border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-xs focus:ring-2 focus:ring-brand-gold dark:text-white">
+                        <input type="text" id="chkCity" required placeholder="Cidade / UF" class="col-span-2 px-3.5 py-2.5 rounded-xl border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-xs focus:ring-2 focus:ring-brand-gold dark:text-white">
+                    </div>
+                    
+                    <div class="flex gap-2 pt-2">
+                        <button type="button" onclick="goToStep(1)" class="w-1/3 py-3 border border-stone-300 dark:border-stone-700 text-stone-700 dark:text-stone-300 font-bold rounded-xl text-xs">Voltar</button>
+                        <button type="button" onclick="goToStep(3)" class="w-2/3 py-3 bg-brand-burgundy text-white font-bold rounded-xl text-xs hover:bg-brand-800">Continuar para Pagamento <i class="fa-solid fa-arrow-right ml-1"></i></button>
+                    </div>
+                </div>
+
+                <!-- Step 3: Interactive Payment -->
+                <div id="checkoutStep3" class="space-y-4 hidden">
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-brand-gold">Forma de Pagamento</h4>
+                    
+                    <!-- Tabs -->
+                    <div class="grid grid-cols-3 gap-2">
+                        <label onclick="setPaymentMethod('pix')" class="cursor-pointer border border-stone-200 dark:border-stone-700 p-3 rounded-2xl flex flex-col items-center gap-1 hover:border-brand-gold text-center has-[:checked]:border-brand-gold has-[:checked]:bg-brand-gold/10">
+                            <input type="radio" name="payMethod" value="pix" checked class="hidden">
+                            <i class="fa-brands fa-pix text-emerald-500 text-xl"></i>
+                            <span class="text-[11px] font-bold dark:text-white">PIX (5% OFF)</span>
+                        </label>
+                        <label onclick="setPaymentMethod('card')" class="cursor-pointer border border-stone-200 dark:border-stone-700 p-3 rounded-2xl flex flex-col items-center gap-1 hover:border-brand-gold text-center has-[:checked]:border-brand-gold has-[:checked]:bg-brand-gold/10">
+                            <input type="radio" name="payMethod" value="card" class="hidden">
+                            <i class="fa-solid fa-credit-card text-brand-gold text-xl"></i>
+                            <span class="text-[11px] font-bold dark:text-white">Cartão</span>
+                        </label>
+                        <label onclick="setPaymentMethod('boleto')" class="cursor-pointer border border-stone-200 dark:border-stone-700 p-3 rounded-2xl flex flex-col items-center gap-1 hover:border-brand-gold text-center has-[:checked]:border-brand-gold has-[:checked]:bg-brand-gold/10">
+                            <input type="radio" name="payMethod" value="boleto" class="hidden">
+                            <i class="fa-solid fa-barcode text-stone-700 dark:text-stone-300 text-xl"></i>
+                            <span class="text-[11px] font-bold dark:text-white">Boleto</span>
+                        </label>
+                    </div>
+
+                    <!-- Payment Display Boxes -->
+                    <div id="payPixBox" class="bg-stone-50 dark:bg-stone-800 p-4 rounded-2xl text-center space-y-3 border border-stone-200 dark:border-stone-700">
+                        <div class="w-32 h-32 bg-white p-2 mx-auto rounded-xl shadow border border-stone-300 flex items-center justify-center">
+                            <i class="fa-solid fa-qrcode text-7xl text-stone-900"></i>
+                        </div>
+                        <p class="text-xs text-stone-500 dark:text-stone-300">Escaneie o QR Code ou use o Copia e Cola. Aprovação instantânea.</p>
+                        <button type="button" onclick="copyPixCode()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs shadow">
+                            <i class="fa-solid fa-copy mr-1"></i> Copiar Código PIX
+                        </button>
+                    </div>
+
+                    <div id="payCardBox" class="hidden space-y-3">
+                        <div class="grid grid-cols-2 gap-2">
+                            <input type="text" placeholder="Número do Cartão" class="col-span-2 px-3 py-2 rounded-xl border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-xs dark:text-white">
+                            <input type="text" placeholder="Validade (MM/AA)" class="px-3 py-2 rounded-xl border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-xs dark:text-white">
+                            <input type="text" placeholder="CVV" class="px-3 py-2 rounded-xl border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-xs dark:text-white">
+                        </div>
+                    </div>
+
+                    <div id="payBoletoBox" class="hidden bg-stone-50 dark:bg-stone-800 p-4 rounded-2xl text-center space-y-2">
+                        <p class="text-xs text-stone-500 dark:text-stone-300">Vencimento em 3 dias úteis. O boleto será enviado ao e-mail.</p>
+                    </div>
+
+                    <div class="flex gap-2 pt-2">
+                        <button type="button" onclick="goToStep(2)" class="w-1/3 py-3 border border-stone-300 dark:border-stone-700 text-stone-700 dark:text-stone-300 font-bold rounded-xl text-xs">Voltar</button>
+                        <button type="button" onclick="finishOrder()" class="w-2/3 py-3.5 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-xl text-xs shadow-lg">
+                            <i class="fa-solid fa-circle-check mr-1"></i> Concluir e Pagar
+                        </button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <!-- Reader Profile Quiz Modal -->
+    <div id="quizModal" class="fixed inset-0 z-50 bg-black/80 opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white dark:bg-stone-900 rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-stone-200 dark:border-stone-800 text-center space-y-6 relative">
+            <button onclick="closeQuizModal()" class="absolute top-4 right-4 text-stone-400 hover:text-stone-600">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+
+            <span class="text-xs font-bold text-brand-gold uppercase tracking-widest bg-brand-gold/10 px-3 py-1 rounded-full">Descubra seu perfil</span>
+            <h3 id="quizQuestionTitle" class="text-xl font-bold font-serif text-brand-burgundy dark:text-white">Qual ambiente perfeito para sua leitura?</h3>
+
+            <div id="quizOptions" class="space-y-3">
+                <!-- Injected options -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications Container -->
+    <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <script>
+        /* Audio Engine (Web Audio API synthesis for page clicks / effects) */
+        let audioEnabled = true;
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playSound(type) {
+            if (!audioEnabled) return;
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                if (type === 'click') {
+                    osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+                    gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.05);
+                } else if (type === 'page') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(200, audioCtx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(600, audioCtx.currentTime + 0.1);
+                    gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.1);
+                } else if (type === 'success') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+                    osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1); // E5
+                    gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.3);
+                }
+            } catch (e) {
+                // Ignore audio restriction fallback
+            }
+        }
+
+        function toggleAudio() {
+            audioEnabled = !audioEnabled;
+            document.getElementById('audioStateText').innerText = audioEnabled ? 'Sons: On' : 'Sons: Off';
+            showToast(audioEnabled ? "Sons ativados" : "Sons desativados");
+        }
+
+        /* 30+ Books Rich Database */
+        const books = [
+            {
+                id: 1,
+                title: "O Poder da Leitura Ativa",
+                author: "Helena Rostova",
+                category: "Desenvolvimento Pessoal",
+                price: 44.90,
+                originalPrice: 59.90,
+                rating: 4.9,
+                badge: "Bestseller",
+                bgGradient: "from-amber-700 to-amber-900",
+                synopsis: "Um guia prático para transformar sua relação com a leitura. Aprenda técnicas de retenção, anotações inteligentes e foco profundo para maximizar cada página lida.",
+                pages: 280, publisher: "Dedezeetos", year: 2024, isbn: "978-65-89311-01-2",
+                sampleText: "Capítulo 1: A Arquitetura da Atenção.\nLer não é um ato passivo. Quando abrimos um livro, iniciamos um diálogo silencioso com uma mente que pode ter vivido há milênios ou a mil milhas de distância..."
+            },
+            {
+                id: 2,
+                title: "A Crônica dos Reinos Esquecidos",
+                author: "Arthur Pendelton",
+                category: "Sci-Fi & Fantasia",
+                price: 52.00,
+                originalPrice: 65.00,
+                rating: 4.8,
+                badge: "Promoção",
+                bgGradient: "from-indigo-900 to-slate-900",
+                synopsis: "Em um mundo onde a magia foi banida há séculos, um jovem aprendiz encontra um grimório antigo capaz de alterar o curso do tempo.",
+                pages: 450, publisher: "Fantasia House", year: 2023, isbn: "978-85-32500-44-0",
+                sampleText: "Capítulo 1: O Silêncio sobre as Torres.\nA névoa prateada cobria os telhados de pedra de Solaria quando o sino da catedral soou treze vezes..."
+            },
+            {
+                id: 3,
+                title: "Sussurros no Outono",
+                author: "Clara M. Andrade",
+                category: "Romance",
+                price: 34.90,
+                originalPrice: 42.00,
+                rating: 4.9,
+                badge: "Bestseller",
+                bgGradient: "from-rose-800 to-rose-950",
+                synopsis: "Duas almas se encontram em uma pequena vila nas montanhas durante o outono. Um romance poético sobre curar feridas do passado.",
+                pages: 320, publisher: "Amor & Letras", year: 2024, isbn: "978-65-55601-99-4",
+                sampleText: "Capítulo 1: As Folhas Douradas.\nO vento frio trazia o cheiro insubstituível de lenha queimada e café recém-coado na pequena cafeteria da esquina..."
+            },
+            {
+                id: 4,
+                title: "Cibernecrópole 2099",
+                author: "Viktor K. Vance",
+                category: "Sci-Fi & Fantasia",
+                price: 48.00,
+                originalPrice: 60.00,
+                rating: 4.7,
+                badge: "Novo",
+                bgGradient: "from-cyan-900 to-slate-950",
+                synopsis: "Numa megalópole futurista dominada por corporações cibernéticas, um detetive sem memória investiga um crime no metaverso.",
+                pages: 410, publisher: "Futuro Press", year: 2024, isbn: "978-85-76081-33-7",
+                sampleText: "Capítulo 1: Neon e Hologramas.\nAs luzes de néon azul refletiam nas poças de água ácida das ruas do Setor 7. Meu implante ocular piscava com avisos..."
+            },
+            {
+                id: 5,
+                title: "O Garoto e a Estrela Perdida",
+                author: "Sofia L. Castilho",
+                category: "Infantojuvenil",
+                price: 29.90,
+                originalPrice: 38.00,
+                rating: 5.0,
+                badge: null,
+                bgGradient: "from-sky-700 to-indigo-900",
+                synopsis: "Uma aventura ilustrada encantadora sobre amizade, coragem e a busca por um lugar no vasto céu da imaginação.",
+                pages: 140, publisher: "Pequenos Leitores", year: 2025, isbn: "978-85-36009-32-1",
+                sampleText: "Capítulo 1: Uma Lâmpada no Sótão.\nLéo adorava olhar para o céu noturno da janela do seu quarto, contando cada pontinho brilhante antes de dormir..."
+            },
+            {
+                id: 6,
+                title: "Cartas para o Amanhã",
+                author: "Gabriel Fontes",
+                category: "Ficção",
+                price: 37.50,
+                originalPrice: 45.00,
+                rating: 4.6,
+                badge: null,
+                bgGradient: "from-emerald-800 to-teal-950",
+                synopsis: "Uma coleção de histórias entrelaçadas revelando os segredos, sonhos e memórias guardadas dentro de correspondências antigas.",
+                pages: 250, publisher: "Dedezeetos", year: 2023, isbn: "978-65-89311-08-9",
+                sampleText: "Capítulo 1: O Envelope Amarelado.\nA caixa de madeira no sótão cheirava a papel antigo e lavanda seca. Dentro dela, vinte e quatro cartas seladas..."
+            },
+            {
+                id: 7,
+                title: "Filosofia para Tempos Sombrios",
+                author: "Prof. Mateo Silva",
+                category: "Filosofia & História",
+                price: 49.90,
+                originalPrice: 62.00,
+                rating: 4.9,
+                badge: "Destaque",
+                bgGradient: "from-amber-900 to-stone-900",
+                synopsis: "Como as lições dos estoicos e existencialistas podem nos ajudar a navegar na incerteza e ansiedade do mundo moderno.",
+                pages: 310, publisher: "Pensamento Vital", year: 2024, isbn: "978-85-40012-33-1",
+                sampleText: "Capítulo 1: O Controle da Mente.\nSêneca escreveu uma vez que sofremos mais na imaginação do que na realidade. A chave estoica é discernir o que depende de nós..."
+            },
+            {
+                id: 8,
+                title: "A ÚLTIMA Sombra em Veneza",
+                author: "Marcella Rossi",
+                category: "Suspense & Thriller",
+                price: 46.00,
+                originalPrice: 58.00,
+                rating: 4.8,
+                badge: null,
+                bgGradient: "from-red-950 to-stone-950",
+                synopsis: "Durante o famoso Carnaval de Veneza, um enigma secular vem à tona com o desaparecimento de uma restauradora de arte renomada.",
+                pages: 380, publisher: "MISTÉRIO", year: 2024, isbn: "978-85-11002-88-2",
+                sampleText: "Capítulo 1: As Máscaras Douradas.\nO gôndola deslizava silenciosamente pelo Canal Grande sob a lua cheia de fevereiro..."
+            },
+            {
+                id: 9,
+                title: "Samurai de Nanquim Vol. 1",
+                author: "Kenji Sato",
+                category: "HQ & Mangá",
+                price: 32.90,
+                originalPrice: 39.90,
+                rating: 4.9,
+                badge: "Bestseller",
+                bgGradient: "from-stone-800 to-red-900",
+                synopsis: "Uma graphic novel magnífica desenhada totalmente em nanquim sobre a jornada de um espadachim renegado no Japão Feudal.",
+                pages: 200, publisher: "Nanquim Comics", year: 2023, isbn: "978-65-88800-12-0",
+                sampleText: "Capítulo 1: A Lâmina Sem Nome.\nO vento soprava as pétalas de cerejeira sobre a ponte de madeira..."
+            },
+            {
+                id: 10,
+                title: "Biografia de um Visionário",
+                author: "David Miller",
+                category: "Biografias",
+                price: 64.90,
+                originalPrice: 79.90,
+                rating: 4.7,
+                badge: null,
+                bgGradient: "from-blue-900 to-slate-900",
+                synopsis: "A trajetória completa, sem filtros, da vida de um dos mentes mais brilhantes e controversas da tecnologia do século XXI.",
+                pages: 520, publisher: "Biografias Press", year: 2023, isbn: "978-85-99001-01-9",
+                sampleText: "Capítulo 1: O Garoto na Garagem.\nEm 1985, numa pequena oficina no interior da Califórnia, nasciam os primeiros circuitos do que viria a mudar o mundo..."
+            },
+            {
+                id: 11,
+                title: "O Pássaro de Fogo",
+                author: "Nadia Volkov",
+                category: "Clássicos",
+                price: 39.90,
+                originalPrice: 49.90,
+                rating: 4.9,
+                badge: "Clássico",
+                bgGradient: "from-orange-900 to-red-950",
+                synopsis: "Uma adaptação suntuosa do clássico folclore russo recheado de lições atemporais sobre honra, amor e superação.",
+                pages: 290, publisher: "Clássicos Dedezeetos", year: 2022, isbn: "978-85-00011-22-3",
+                sampleText: "Capítulo 1: O Jardim do Czar.\nNo centro do vasto império, existia uma árvore cujas maçãs de ouro reluziam sob o sol de verão..."
+            },
+            {
+                id: 12,
+                title: "A Revolução da Inteligência Artificial",
+                author: "Dr. Alan Turing Jr.",
+                category: "Não-Ficção",
+                price: 54.90,
+                originalPrice: 68.00,
+                rating: 4.8,
+                badge: "Novo",
+                bgGradient: "from-purple-900 to-slate-950",
+                synopsis: "Entenda os impactos éticos, sociais e econômicos das redes neurais e o que nos espera no horizonte das máquinas conscientes.",
+                pages: 340, publisher: "TechBooks", year: 2026, isbn: "978-65-00112-99-0",
+                sampleText: "Capítulo 1: Além do Teste de Turing.\nO ano de 2026 marca uma virada histórica onde modelos generativos ultrapassaram barreiras que antes julgávamos exclusivas da alma humana..."
+            },
+            {
+                id: 13,
+                title: "Cozinha com Alma",
+                author: "Chef Breno Oliveira",
+                category: "Não-Ficção",
+                price: 59.90,
+                originalPrice: 75.00,
+                rating: 4.9,
+                badge: null,
+                bgGradient: "from-amber-800 to-orange-950",
+                synopsis: "Receitas afetivas acompanhadas de crônicas gastronômicas e memórias de viagens pelos sabores do Brasil e do mundo.",
+                pages: 240, publisher: "Gourmet Press", year: 2024, isbn: "978-85-11223-00-1",
+                sampleText: "Capítulo 1: O Cheiro do Alho Refogado.\nA cozinha é o único lugar da casa onde todos os cinco sentidos trabalham em harmonia perfeita..."
+            },
+            {
+                id: 14,
+                title: "Nebulosa Perdida",
+                author: "Elena Rostova",
+                category: "Sci-Fi & Fantasia",
+                price: 42.00,
+                originalPrice: 52.00,
+                rating: 4.6,
+                badge: null,
+                bgGradient: "from-indigo-950 to-purple-950",
+                synopsis: "A bordo da nave explorações Helios, a tripulação descobre uma anomalia espacial que abriga vestígios de uma civilização extinta.",
+                pages: 380, publisher: "Cosmo", year: 2023, isbn: "978-85-44332-11-8",
+                sampleText: "Capítulo 1: Ponto de Não Retorno.\nO alarme do painel central piscava num tom vermelho suave enquanto entrávamos na órbita da anomalia..."
+            },
+            {
+                id: 15,
+                title: "O Jardim Secreto de Kyoto",
+                author: "Aimi Tanaka",
+                category: "Romance",
+                price: 36.90,
+                originalPrice: 44.90,
+                rating: 4.8,
+                badge: "Bestseller",
+                bgGradient: "from-emerald-900 to-stone-900",
+                synopsis: "Uma jovem paisagista viaja até Kyoto para restaurar um jardim histórico e descobre segredos guardados há três gerações.",
+                pages: 310, publisher: "Amor & Letras", year: 2024, isbn: "978-65-55601-12-0",
+                sampleText: "Capítulo 1: O Som do Bambu.\nO bambuzal sussurrava com a brisa leve da manhã japonesa enquanto Yumi caminhava pelo caminho de pedras macias..."
+            },
+            {
+                id: 16,
+                title: "Algoritmos da Felicidade",
+                author: "Lucas M. Neves",
+                category: "Desenvolvimento Pessoal",
+                price: 38.00,
+                originalPrice: 48.00,
+                rating: 4.5,
+                badge: null,
+                bgGradient: "from-teal-800 to-slate-900",
+                synopsis: "Engenharia de hábitos simples baseada em neurociência para reduzir o estresse digital e reequilibrar sua rotina diária.",
+                pages: 220, publisher: "Mente Clara", year: 2023, isbn: "978-85-76089-99-0",
+                sampleText: "Capítulo 1: A Armadilha da Dopamina.\nQuantas vezes você checou seu celular na última hora? Nosso cérebro foi hackeado por notificações virtuais..."
+            },
+            {
+                id: 17,
+                title: "A Cidade de Vidro",
+                author: "Henrique Vane",
+                category: "Suspense & Thriller",
+                price: 45.00,
+                originalPrice: 55.00,
+                rating: 4.7,
+                badge: null,
+                bgGradient: "from-slate-800 to-black",
+                synopsis: "Um arquiteto descobre uma mensagem oculta na planta da torre mais alta da cidade, desencadeando uma corrida mortal contra o tempo.",
+                pages: 360, publisher: "MISTÉRIO", year: 2024, isbn: "978-85-11002-99-0",
+                sampleText: "Capítulo 1: O 80º Andar.\nDo topo da torre de vidro, as pessoas abaixo pareciam pequenos pontos pretos em movimento..."
+            },
+            {
+                id: 18,
+                title: "Imperium: A Queda de Roma",
+                author: "Prof. Mateo Silva",
+                category: "Filosofia & História",
+                price: 68.00,
+                originalPrice: 85.00,
+                rating: 4.9,
+                badge: "Destaque",
+                bgGradient: "from-red-900 to-amber-950",
+                synopsis: "Uma análise profunda sobre os fatores econômicos, políticos e sociais que culminaram no fim do maior império da antiguidade.",
+                pages: 480, publisher: "História Viva", year: 2022, isbn: "978-85-40012-44-0",
+                sampleText: "Capítulo 1: As Fronteiras do Reno.\nNo inverno de 406 d.C., o rio Reno congelou completamente, permitindo a travessia ininterrupta das tribos..."
+            },
+            {
+                id: 19,
+                title: "Aventuras no Reino do Tempo",
+                author: "Sofia L. Castilho",
+                category: "Infantojuvenil",
+                price: 27.90,
+                originalPrice: 35.00,
+                rating: 4.8,
+                badge: null,
+                bgGradient: "from-yellow-700 to-amber-900",
+                synopsis: "Dois irmãos encontram um relógio de bolso místico que consegue desacelerar os segundos para solucionar mistérios.",
+                pages: 160, publisher: "Pequenos Leitores", year: 2024, isbn: "978-85-36009-44-0",
+                sampleText: "Capítulo 1: O Tic-Tac Diferente.\nO relógio da sala de estar parecia bater num ritmo estranho naquela tarde chuvosa..."
+            },
+            {
+                id: 20,
+                title: "Diário de um Astrônomo",
+                author: "Dr. Alan Turing Jr.",
+                category: "Não-Ficção",
+                price: 49.00,
+                originalPrice: 59.90,
+                rating: 4.9,
+                badge: "Bestseller",
+                bgGradient: "from-blue-950 to-black",
+                synopsis: "Relatos de noites passadas em observatórios isolados nos Andes contemplando galáxias distantes e o significado da existência.",
+                pages: 280, publisher: "Cosmo", year: 2023, isbn: "978-85-44332-99-0",
+                sampleText: "Capítulo 1: A Escuridão do Atacama.\nA 5.000 metros de altitude, o ar é rarefeito e o céu é tão claro que as estrelas parecem saltar dos olhos..."
+            },
+            {
+                id: 21,
+                title: "O Fantasma da Ópera de Viena",
+                author: "Marcella Rossi",
+                category: "Clássicos",
+                price: 41.90,
+                originalPrice: 50.00,
+                rating: 4.7,
+                badge: null,
+                bgGradient: "from-purple-950 to-stone-950",
+                synopsis: "Uma releitura gótica envolvente passada nos bastidores grandiosos da casa de ópera mais prestigiada da Áustria.",
+                pages: 330, publisher: "Clássicos Dedezeetos", year: 2023, isbn: "978-85-00011-33-0",
+                sampleText: "Capítulo 1: A Oração no Camarim.\nOs aplausos ensurdecedores ecoavam através das cortinas de veludo vermelho..."
+            },
+            {
+                id: 22,
+                title: "Mente Inabalável",
+                author: "Helena Rostova",
+                category: "Desenvolvimento Pessoal",
+                price: 42.90,
+                originalPrice: 52.00,
+                rating: 4.8,
+                badge: null,
+                bgGradient: "from-stone-800 to-stone-950",
+                synopsis: "Construa resiliência psicológica diante de adversidades inesperadas e mantenha a clareza mental em situações de pressão.",
+                pages: 260, publisher: "Dedezeetos", year: 2024, isbn: "978-65-89311-20-0",
+                sampleText: "Capítulo 1: A Calmaria na Tempestade.\nResiliência não é a ausência de dor, mas a capacidade de continuar avançando com propósito..."
+            },
+            {
+                id: 23,
+                title: "O Círculo dos Alquimistas",
+                author: "Arthur Pendelton",
+                category: "Sci-Fi & Fantasia",
+                price: 55.00,
+                originalPrice: 69.00,
+                rating: 4.9,
+                badge: "Destaque",
+                bgGradient: "from-emerald-950 to-stone-950",
+                synopsis: "A busca pela pedra filosofal reacende antigas guerras secretas nas catacumbas sob a Paris do século XVII.",
+                pages: 420, publisher: "Fantasia House", year: 2024, isbn: "978-85-32500-55-0",
+                sampleText: "Capítulo 1: O Mercúrio Vivo.\nO frasco de vidro vibrava sobre a mesa de madeira de carvalho enquanto o elixir ganhava cor..."
+            },
+            {
+                id: 24,
+                title: "Poemas para Noites Insones",
+                author: "Gabriel Fontes",
+                category: "Ficção",
+                price: 28.00,
+                originalPrice: 35.00,
+                rating: 4.6,
+                badge: null,
+                bgGradient: "from-pink-900 to-rose-950",
+                synopsis: "Versos intimistas e pungentes gravados para aqueles que encontram consolo na quietude das madrugadas.",
+                pages: 180, publisher: "Dedezeetos", year: 2023, isbn: "978-65-89311-33-0",
+                sampleText: "Capítulo 1: Três Horas da Manhã.\nA noite sussurra segredos que o dia insiste em esconder..."
+            },
+            {
+                id: 25,
+                title: "Lendas do Sol Nascente",
+                author: "Kenji Sato",
+                category: "HQ & Mangá",
+                price: 34.90,
+                originalPrice: 42.00,
+                rating: 5.0,
+                badge: "Promoção",
+                bgGradient: "from-red-800 to-neutral-950",
+                synopsis: "Contos folclóricos japoneses ilustrados magistralmente com traços clássicos e aquarela tradicional.",
+                pages: 210, publisher: "Nanquim Comics", year: 2024, isbn: "978-65-88800-22-0",
+                sampleText: "Capítulo 1: A Raposa de Nove Caudas.\nNa floresta sagrada na base do Monte Fuji, uma sombra observava as lanternas de papel..."
+            },
+            {
+                id: 26,
+                title: "O Código das Navegações",
+                author: "Prof. Mateo Silva",
+                category: "Filosofia & História",
+                price: 58.00,
+                originalPrice: 70.00,
+                rating: 4.7,
+                badge: null,
+                bgGradient: "from-cyan-950 to-blue-950",
+                synopsis: "Os mapas secretos e instrumentos náuticos que permitiram aos exploradores cruzar oceanos desconhecidos.",
+                pages: 390, publisher: "História Viva", year: 2023, isbn: "978-85-40012-55-0",
+                sampleText: "Capítulo 1: O Astrolábio de Bronze.\nCalcular a latitude sob céus nublados era a arte mais perigosa de um capitão quinhentista..."
+            },
+            {
+                id: 27,
+                title: "Sonho de uma Noite de Verão",
+                author: "Clara M. Andrade",
+                category: "Romance",
+                price: 32.00,
+                originalPrice: 40.00,
+                rating: 4.8,
+                badge: null,
+                bgGradient: "from-amber-800 to-rose-900",
+                synopsis: "Um reencontro apaixonante numa ilha grega durante as férias de verão reabre promessas da juventude.",
+                pages: 290, publisher: "Amor & Letras", year: 2024, isbn: "978-65-55601-33-0",
+                sampleText: "Capítulo 1: O Mar Egeu.\nAs águas cristalinas refletiam o sol radiante enquanto a balsa se aproximava do porto de casinhas brancas..."
+            },
+            {
+                id: 28,
+                title: "Memórias de um Cientista",
+                author: "David Miller",
+                category: "Biografias",
+                price: 52.00,
+                originalPrice: 64.00,
+                rating: 4.6,
+                badge: null,
+                bgGradient: "from-slate-800 to-blue-900",
+                synopsis: "Relatos autobiográficos sobre a descoberta da estrutura do DNA e as rivalidades nos bastidores da ciência acadêmica.",
+                pages: 310, publisher: "Biografias Press", year: 2022, isbn: "978-85-99001-22-0",
+                sampleText: "Capítulo 1: A Dupla Hélice.\nNaquela tarde fria em Cambridge, sabíamos que tínhamos encontrado a chave da hereditariedade..."
+            },
+            {
+                id: 29,
+                title: "O Herdeiro da Névoa",
+                author: "Viktor K. Vance",
+                category: "Sci-Fi & Fantasia",
+                price: 49.90,
+                originalPrice: 62.00,
+                rating: 4.9,
+                badge: "Bestseller",
+                bgGradient: "from-stone-900 to-purple-950",
+                synopsis: "Num reino envolto por uma fumaça mágica mortal, apenas aqueles com sangue nobre conseguem enxergar o caminho.",
+                pages: 440, publisher: "Futuro Press", year: 2025, isbn: "978-85-76081-44-0",
+                sampleText: "Capítulo 1: A Respiração do Dragão.\nA névoa cinzenta cobria o vale até onde a vista alcançava, ocultando os monstros que lá habitavam..."
+            },
+            {
+                id: 30,
+                title: "A Arte da Negociação",
+                author: "Marcus Vance",
+                category: "Desenvolvimento Pessoal",
+                price: 41.00,
+                originalPrice: 50.00,
+                rating: 4.7,
+                badge: null,
+                bgGradient: "from-amber-950 to-stone-900",
+                synopsis: "Estratégias de persuasão pacífica e comunicação não-violenta para conquistar acordos vantajosos para todos.",
+                pages: 230, publisher: "Alta Mente", year: 2024, isbn: "978-85-76089-88-0",
+                sampleText: "Capítulo 1: O Primeiro 'Não'.\nUma negociação real não começa até que a outra parte diga o primeiro não. É a partir daí que se constrói a empatia..."
+            }
+        ];
+
+        const categories = ["Todos", "Ficção", "Sci-Fi & Fantasia", "Romance", "Desenvolvimento Pessoal", "Filosofia & História", "Suspense & Thriller", "Infantojuvenil", "HQ & Mangá", "Biografias", "Não-Ficção", "Clássicos"];
+
+        /* App State */
+        let currentCategory = "Todos";
+        let currentSort = "popular";
+        let currentMinRating = "all";
+        let cart = [];
+        let wishlist = [];
+        let activeCoupon = null;
+        let selectedBoxPlan = 'mensal';
+        let currentHeroIndex = 0;
+
+        /* Initialize Page */
+        document.addEventListener("DOMContentLoaded", () => {
+            renderCategories();
+            renderBooks();
+            renderHeroCarousel();
+            setupSearchEngine();
+            setInterval(rotateHeroCarousel, 6000);
+        });
+
+        /* Generator for Custom Artistic SVG Covers for Books */
+        function createSvgCover(book) {
+            return `
+                <div class="w-full h-full bg-gradient-to-br ${book.bgGradient} p-4 flex flex-col justify-between text-white border-l-4 border-amber-200/40 relative overflow-hidden select-none">
+                    <div class="absolute -right-10 -bottom-10 opacity-10 text-white">
+                        <i class="fa-solid fa-book-open text-9xl"></i>
+                    </div>
+                    <div class="space-y-1 relative z-10">
+                        <span class="text-[9px] uppercase font-bold tracking-widest text-brand-gold bg-black/40 px-2 py-0.5 rounded border border-brand-gold/30">${book.category}</span>
+                        <h4 class="font-serif font-extrabold text-sm sm:text-base leading-tight mt-1 drop-shadow">${book.title}</h4>
+                    </div>
+                    
+                    <div class="my-auto py-2 text-center relative z-10 opacity-80">
+                        <div class="w-8 h-0.5 bg-brand-gold mx-auto my-1"></div>
+                        <i class="fa-solid fa-feather-pointed text-xs text-brand-gold"></i>
+                    </div>
+
+                    <div class="relative z-10 border-t border-white/20 pt-2 flex justify-between items-end">
+                        <span class="text-[10px] font-medium text-stone-300 truncate max-w-[120px]">${book.author}</span>
+                        <span class="text-[9px] font-mono text-brand-gold/80">Dedezeetos</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        /* Render Category Navigation */
+        function renderCategories() {
+            const container = document.getElementById("categoryContainer");
+            container.innerHTML = categories.map(cat => `
+                <button onclick="filterCategory('${cat}')" 
+                    class="px-4 py-2 rounded-2xl text-xs font-semibold whitespace-nowrap transition-all ${
+                        currentCategory === cat 
+                        ? 'bg-brand-burgundy text-white shadow-md' 
+                        : 'bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 text-stone-700 dark:text-stone-300 hover:bg-brand-gold/10'
+                    }">
+                    ${cat}
+                </button>
+            `).join("");
+        }
+
+        /* Render Hero Spotlight Carousel */
+        function renderHeroCarousel() {
+            const card = document.getElementById("heroCarouselCard");
+            const book = books[currentHeroIndex];
+
+            card.innerHTML = `
+                <div class="flex flex-col sm:flex-row gap-6 items-center">
+                    <div class="w-36 h-48 rounded-2xl shadow-2xl overflow-hidden shrink-0 transform hover:scale-105 transition-transform duration-300">
+                        ${createSvgCover(book)}
+                    </div>
+                    <div class="space-y-3 text-center sm:text-left flex-1">
+                        <span class="text-[10px] font-bold text-brand-gold uppercase tracking-widest bg-brand-gold/10 px-2.5 py-1 rounded-full border border-brand-gold/20">
+                            Livro em Destaque #${currentHeroIndex + 1}
+                        </span>
+                        <h3 class="text-xl font-bold font-serif text-brand-burgundy dark:text-white leading-tight">${book.title}</h3>
+                        <p class="text-xs text-stone-500 dark:text-stone-400 font-medium">Por ${book.author}</p>
+                        <p class="text-xs text-stone-600 dark:text-stone-300 line-clamp-2">${book.synopsis}</p>
+                        <div class="flex items-center justify-center sm:justify-start gap-4 pt-2">
+                            <span class="text-xl font-bold font-serif text-brand-burgundy dark:text-brand-gold">R$ ${book.price.toFixed(2).replace('.', ',')}</span>
+                            <button onclick="addToCart(${book.id})" class="px-4 py-2 bg-brand-burgundy hover:bg-brand-800 text-white font-bold text-xs rounded-xl shadow transition-all">
+                                <i class="fa-solid fa-cart-plus mr-1"></i> Comprar Agora
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function rotateHeroCarousel() {
+            currentHeroIndex = (currentHeroIndex + 1) % books.length;
+            renderHeroCarousel();
+        }
+
+        /* Apply Filters & Render Main Grid */
+        function applyFilters() {
+            currentSort = document.getElementById("sortSelect").value;
+            currentMinRating = document.getElementById("ratingFilter").value;
+            renderBooks();
+        }
+
+        function filterCategory(cat) {
+            playSound('click');
+            currentCategory = cat;
+            renderCategories();
+            renderBooks();
+        }
+
+        function renderBooks() {
+            const grid = document.getElementById("booksGrid");
+            const emptyState = document.getElementById("emptyState");
+            const query = document.getElementById("searchInput").value.toLowerCase();
+
+            let filtered = books.filter(b => {
+                const matchesCat = currentCategory === "Todos" || b.category === currentCategory;
+                const matchesSearch = b.title.toLowerCase().includes(query) || b.author.toLowerCase().includes(query) || b.category.toLowerCase().includes(query);
+                const matchesRating = currentMinRating === "all" || b.rating >= parseFloat(currentMinRating);
+                return matchesCat && matchesSearch && matchesRating;
+            });
+
+            // Sort
+            if (currentSort === "price-asc") filtered.sort((a,b) => a.price - b.price);
+            else if (currentSort === "price-desc") filtered.sort((a,b) => b.price - a.price);
+            else if (currentSort === "rating") filtered.sort((a,b) => b.rating - a.rating);
+            else if (currentSort === "title-asc") filtered.sort((a,b) => a.title.localeCompare(b.title));
+
+            document.getElementById("resultsCount").innerText = `Exibindo ${filtered.length} livros`;
+
+            if (filtered.length === 0) {
+                grid.innerHTML = "";
+                emptyState.classList.remove("hidden");
+                return;
+            }
+
+            emptyState.classList.add("hidden");
+            grid.innerHTML = filtered.map(book => {
+                const isWished = wishlist.includes(book.id);
+                return `
+                    <div class="book-card group">
+                        <div class="bg-white dark:bg-stone-900 rounded-3xl p-4 border border-stone-200 dark:border-stone-800 shadow-sm hover:shadow-2xl transition-all duration-300 flex flex-col justify-between h-full relative">
+                            
+                            <!-- Wishlist Toggle Pin -->
+                            <button onclick="toggleWishlist(${book.id})" class="absolute top-6 right-6 z-20 w-8 h-8 rounded-full bg-white/80 dark:bg-stone-800/80 backdrop-blur-md flex items-center justify-center text-xs transition-transform hover:scale-110 ${isWished ? 'text-red-500' : 'text-stone-400 hover:text-red-500'}">
+                                <i class="fa-${isWished ? 'solid' : 'regular'} fa-heart"></i>
+                            </button>
+
+                            <!-- Badge -->
+                            ${book.badge ? `
+                                <span class="absolute top-6 left-6 z-20 text-[9px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md text-white bg-brand-burgundy shadow-sm">
+                                    ${book.badge}
+                                </span>
+                            ` : ''}
+
+                            <!-- 3D Cover Wrapper -->
+                            <div class="book-cover-wrapper w-full aspect-[3/4] rounded-2xl overflow-hidden shadow-md mb-4 cursor-pointer" onclick="openQuickView(${book.id})">
+                                ${createSvgCover(book)}
+                            </div>
+
+                            <!-- Details -->
+                            <div class="space-y-2 flex-1 flex flex-col justify-between">
+                                <div>
+                                    <span class="text-[9px] uppercase font-bold text-brand-gold tracking-widest">${book.category}</span>
+                                    <h3 onclick="openQuickView(${book.id})" class="font-serif font-bold text-stone-900 dark:text-white text-sm leading-snug line-clamp-1 hover:text-brand-gold cursor-pointer transition-colors mt-0.5">${book.title}</h3>
+                                    <p class="text-xs text-stone-500 dark:text-stone-400 font-medium">${book.author}</p>
+                                </div>
+
+                                <div class="pt-2 border-t border-stone-100 dark:border-stone-800">
+                                    <div class="flex items-center gap-1 text-amber-400 text-xs mb-2">
+                                        <i class="fa-solid fa-star text-[10px]"></i>
+                                        <span class="text-[11px] font-bold text-stone-700 dark:text-stone-300">${book.rating}</span>
+                                        <span class="text-[10px] text-stone-400">(${book.pages} págs)</span>
+                                    </div>
+
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <span class="text-[10px] text-stone-400 line-through block leading-none">R$ ${book.originalPrice.toFixed(2).replace('.', ',')}</span>
+                                            <span class="text-base font-bold font-serif text-brand-burgundy dark:text-brand-gold">R$ ${book.price.toFixed(2).replace('.', ',')}</span>
+                                        </div>
+                                        
+                                        <div class="flex gap-1">
+                                            <button onclick="openReaderModal(${book.id})" class="w-8 h-8 rounded-xl bg-stone-100 dark:bg-stone-800 hover:bg-brand-gold/20 text-stone-700 dark:text-stone-300 flex items-center justify-center transition-colors" title="Degustar Amostra">
+                                                <i class="fa-solid fa-book-open text-xs"></i>
+                                            </button>
+                                            <button onclick="addToCart(${book.id})" class="w-8 h-8 rounded-xl bg-brand-burgundy hover:bg-brand-800 text-white flex items-center justify-center transition-colors shadow-sm" title="Adicionar ao Carrinho">
+                                                <i class="fa-solid fa-cart-plus text-xs"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                `;
+            }).join("");
+        }
+
+        function setupSearchEngine() {
+            const input = document.getElementById("searchInput");
+            const suggestions = document.getElementById("searchSuggestions");
+
+            input.addEventListener("input", (e) => {
+                const query = e.target.value.toLowerCase().trim();
+                document.getElementById("clearSearchBtn").classList.toggle("hidden", query === "");
+
+                if (query.length < 2) {
+                    suggestions.classList.add("hidden");
+                    renderBooks();
+                    return;
+                }
+
+                const matches = books.filter(b => b.title.toLowerCase().includes(query) || b.author.toLowerCase().includes(query)).slice(0, 5);
+
+                if (matches.length > 0) {
+                    suggestions.innerHTML = matches.map(b => `
+                        <div onclick="openQuickView(${b.id}); suggestions.classList.add('hidden')" class="p-3 hover:bg-stone-100 dark:hover:bg-stone-800 cursor-pointer flex items-center gap-3 border-b border-stone-100 dark:border-stone-800">
+                            <div class="w-8 h-10 rounded overflow-hidden shrink-0">${createSvgCover(b)}</div>
+                            <div class="min-w-0">
+                                <h5 class="text-xs font-bold font-serif dark:text-white truncate">${b.title}</h5>
+                                <span class="text-[10px] text-stone-400">${b.author} • R$ ${b.price.toFixed(2).replace('.', ',')}</span>
+                            </div>
+                        </div>
+                    `).join("");
+                    suggestions.classList.remove("hidden");
+                } else {
+                    suggestions.classList.add("hidden");
+                }
+
+                renderBooks();
+            });
+        }
+
+        function clearSearch() {
+            document.getElementById("searchInput").value = "";
+            document.getElementById("clearSearchBtn").classList.add("hidden");
+            document.getElementById("searchSuggestions").classList.add("hidden");
+            renderBooks();
+        }
+
+        let currentReaderFontSize = 16;
+
+        function openReaderModal(bookId) {
+            playSound('page');
+            const book = books.find(b => b.id === bookId);
+            if (!book) return;
+
+            document.getElementById("readerTitle").innerText = book.title;
+            document.getElementById("readerAuthor").innerText = `Por ${book.author}`;
+            document.getElementById("readerBody").innerText = book.sampleText + "\n\nCapítulo 2: A Jornada Continua...\nAs respostas nem sempre vêm quando desejamos, mas no tempo exato em que estamos preparados para compreendê-las.";
+            
+            document.getElementById("readerAddToCartBtn").onclick = () => {
+                addToCart(book.id);
+                closeReaderModal();
+            };
+
+            const modal = document.getElementById("readerModal");
+            modal.classList.remove("opacity-0", "pointer-events-none");
+            document.getElementById("readerContentBox").classList.remove("scale-95");
+            document.getElementById("readerContentBox").classList.add("scale-100");
+        }
+
+        function closeReaderModal() {
+            const modal = document.getElementById("readerModal");
+            modal.classList.add("opacity-0", "pointer-events-none");
+            document.getElementById("readerContentBox").classList.remove("scale-100");
+            document.getElementById("readerContentBox").classList.add("scale-95");
+        }
+
+        function changeFontSize(delta) {
+            currentReaderFontSize = Math.max(12, Math.min(24, currentReaderFontSize + delta));
+            document.getElementById("fontSizeDisplay").innerText = `${currentReaderFontSize}px`;
+            document.getElementById("readerBody").style.fontSize = `${currentReaderFontSize}px`;
+        }
+
+        function setReaderTheme(theme) {
+            const body = document.getElementById("readerBody");
+            body.className = `flex-1 overflow-y-auto p-6 sm:p-12 transition-colors duration-300 font-serif leading-relaxed reader-theme-${theme}`;
+        }
+
+        let activeQvBookId = null;
+        let bookReviewsState = {};
+
+        function openQuickView(bookId) {
+            playSound('click');
+            const book = books.find(b => b.id === bookId);
+            if (!book) return;
+            activeQvBookId = bookId;
+
+            document.getElementById("qvCoverContainer").innerHTML = createSvgCover(book);
+            document.getElementById("qvCategory").innerText = book.category;
+            document.getElementById("qvTitle").innerText = book.title;
+            document.getElementById("qvAuthor").innerText = `Por ${book.author}`;
+            document.getElementById("qvSynopsis").innerText = book.synopsis;
+            document.getElementById("qvPages").innerText = book.pages;
+            document.getElementById("qvPublisher").innerText = book.publisher;
+            document.getElementById("qvYear").innerText = book.year;
+            document.getElementById("qvIsbn").innerText = book.isbn;
+            document.getElementById("qvPrice").innerText = `R$ ${book.price.toFixed(2).replace('.', ',')}`;
+            document.getElementById("qvOldPrice").innerText = `R$ ${book.originalPrice.toFixed(2).replace('.', ',')}`;
+            document.getElementById("qvStars").innerHTML = Array.from({length: 5}).map((_, i) => `<i class="fa-${i < Math.floor(book.rating) ? 'solid' : 'regular'} fa-star"></i>`).join("");
+
+            document.getElementById("qvSampleBtn").onclick = () => {
+                closeQuickView();
+                openReaderModal(book.id);
+            };
+
+            document.getElementById("qvAddToCartBtn").onclick = () => {
+                addToCart(book.id);
+                closeQuickView();
+            };
+
+            renderBookReviews(bookId);
+
+            const modal = document.getElementById("quickViewModal");
+            modal.classList.remove("opacity-0", "pointer-events-none");
+            document.getElementById("qvContentBox").classList.remove("scale-95");
+            document.getElementById("qvContentBox").classList.add("scale-100");
+        }
+
+        function closeQuickView() {
+            const modal = document.getElementById("quickViewModal");
+            modal.classList.add("opacity-0", "pointer-events-none");
+            document.getElementById("qvContentBox").classList.remove("scale-100");
+            document.getElementById("qvContentBox").classList.add("scale-95");
+        }
+
+        function renderBookReviews(bookId) {
+            const list = document.getElementById("qvReviewsList");
+            const reviews = bookReviewsState[bookId] || [
+                { author: "Mariana S.", rating: 5, text: "Uma leitura completamente transformadora. Chegou super rápido!" },
+                { author: "Carlos E.", rating: 4, text: "Ótima edição e acabamento excelente da Dedezeetos." }
+            ];
+
+            list.innerHTML = reviews.map(r => `
+                <div class="bg-stone-50 dark:bg-stone-800 p-2.5 rounded-xl border border-stone-200 dark:border-stone-700 text-xs space-y-1">
+                    <div class="flex justify-between items-center">
+                        <strong class="dark:text-white font-semibold">${r.author}</strong>
+                        <span class="text-amber-400 font-bold">${'★'.repeat(r.rating)}</span>
+                    </div>
+                    <p class="text-stone-600 dark:text-stone-300 text-[11px]">${r.text}</p>
+                </div>
+            `).join("");
+        }
+
+        function toggleReviewForm() {
+            document.getElementById("addReviewForm").classList.toggle("hidden");
+        }
+
+        function submitReview(e) {
+            e.preventDefault();
+            const author = document.getElementById("reviewAuthorInput").value;
+            const rating = parseInt(document.getElementById("reviewRatingInput").value);
+            const text = document.getElementById("reviewTextInput").value;
+
+            if (!bookReviewsState[activeQvBookId]) bookReviewsState[activeQvBookId] = [];
+            bookReviewsState[activeQvBookId].unshift({ author, rating, text });
+
+            renderBookReviews(activeQvBookId);
+            toggleReviewForm();
+            e.target.reset();
+            showToast("Avaliação publicada com sucesso!");
+        }
+
+        function addToCart(bookId) {
+            playSound('click');
+            const book = books.find(b => b.id === bookId);
+            if (!book) return;
+
+            const existing = cart.find(i => i.id === bookId);
+            if (existing) existing.quantity++;
+            else cart.push({ ...book, quantity: 1 });
+
+            updateCartUI();
+            showToast(`"${book.title}" no carrinho!`);
+        }
+
+        function updateCartQuantity(bookId, delta) {
+            const item = cart.find(i => i.id === bookId);
+            if (!item) return;
+
+            item.quantity += delta;
+            if (item.quantity <= 0) cart = cart.filter(i => i.id !== bookId);
+            updateCartUI();
+        }
+
+        function removeFromCart(bookId) {
+            cart = cart.filter(i => i.id !== bookId);
+            updateCartUI();
+            showToast("Item removido");
+        }
+
+        function applyCoupon() {
+            const code = document.getElementById("couponInput").value.trim().toUpperCase();
+            if (code === "DEDEZEETOS20" || code === "BENVINDO10") {
+                activeCoupon = code === "DEDEZEETOS20" ? 0.20 : 0.10;
+                showToast(`Cupom ${code} aplicado!`);
+                updateCartUI();
+            } else {
+                showToast("Cupom inválido!");
+            }
+        }
+
+        function updateCartUI() {
+            const badge = document.getElementById("cartBadge");
+            const container = document.getElementById("cartItemsContainer");
+            const emptyState = document.getElementById("cartEmptyState");
+            const footer = document.getElementById("cartFooter");
+
+            const totalCount = cart.reduce((acc, i) => acc + i.quantity, 0);
+            badge.innerText = totalCount;
+
+            if (cart.length === 0) {
+                emptyState.classList.remove("hidden");
+                container.classList.add("hidden");
+                footer.classList.add("hidden");
+            } else {
+                emptyState.classList.add("hidden");
+                container.classList.remove("hidden");
+                footer.classList.remove("hidden");
+
+                container.innerHTML = cart.map(item => `
+                    <div class="flex gap-3 bg-stone-50 dark:bg-stone-800 p-3 rounded-2xl border border-stone-200 dark:border-stone-700 items-center">
+                        <div class="w-10 h-14 rounded overflow-hidden shrink-0">${createSvgCover(item)}</div>
+                        <div class="flex-1 min-w-0">
+                            <h4 class="font-bold text-xs font-serif dark:text-white truncate">${item.title}</h4>
+                            <span class="text-[11px] text-stone-500">R$ ${item.price.toFixed(2).replace('.', ',')}</span>
+                            <div class="flex items-center gap-2 mt-1">
+                                <div class="flex items-center border border-stone-300 dark:border-stone-600 rounded-lg overflow-hidden bg-white dark:bg-stone-700">
+                                    <button onclick="updateCartQuantity(${item.id}, -1)" class="px-2 text-xs font-bold dark:text-white">-</button>
+                                    <span class="px-2 text-xs font-semibold dark:text-white">${item.quantity}</span>
+                                    <button onclick="updateCartQuantity(${item.id}, 1)" class="px-2 text-xs font-bold dark:text-white">+</button>
+                                </div>
+                                <button onclick="removeFromCart(${item.id})" class="text-[10px] text-red-500 hover:underline">Remover</button>
+                            </div>
+                        </div>
+                        <div class="text-right font-bold text-xs text-brand-burgundy dark:text-brand-gold">
+                            R$ ${(item.price * item.quantity).toFixed(2).replace('.', ',')}
+                        </div>
+                    </div>
+                `).join("");
+            }
+
+            const subtotal = cart.reduce((acc, i) => acc + (i.price * i.quantity), 0);
+            const discount = activeCoupon ? subtotal * activeCoupon : 0;
+            const freeShippingTarget = 150.00;
+            const total = subtotal - discount;
+
+            // Free Shipping Progress
+            const pct = Math.min(100, Math.round((subtotal / freeShippingTarget) * 100));
+            document.getElementById("freeShippingBar").style.width = `${pct}%`;
+            document.getElementById("freeShippingPct").innerText = `${pct}%`;
+            document.getElementById("freeShippingText").innerText = pct >= 100 ? "Você ganhou FRETE GRÁTIS!" : `Faltam R$ ${(freeShippingTarget - subtotal).toFixed(2).replace('.', ',')} para Frete Grátis`;
+
+            document.getElementById("subtotalText").innerText = `R$ ${subtotal.toFixed(2).replace('.', ',')}`;
+            if (activeCoupon) {
+                document.getElementById("discountRow").classList.remove("hidden");
+                document.getElementById("discountText").innerText = `- R$ ${discount.toFixed(2).replace('.', ',')}`;
+            }
+            document.getElementById("totalText").innerText = `R$ ${total.toFixed(2).replace('.', ',')}`;
+        }
+
+        function toggleCartDrawer(open) {
+            playSound('click');
+            const drawer = document.getElementById("cartDrawer");
+            const overlay = document.getElementById("cartOverlay");
+
+            if (open) {
+                overlay.classList.remove("opacity-0", "pointer-events-none");
+                drawer.classList.remove("translate-x-full");
+            } else {
+                overlay.classList.add("opacity-0", "pointer-events-none");
+                drawer.classList.add("translate-x-full");
+            }
+        }
+
+        /* Wishlist Functions */
+        function toggleWishlist(bookId) {
+            playSound('click');
+            if (wishlist.includes(bookId)) {
+                wishlist = wishlist.filter(id => id !== bookId);
+                showToast("Removido dos favoritos");
+            } else {
+                wishlist.push(bookId);
+                showToast("Adicionado aos favoritos!");
+            }
+            const badge = document.getElementById("wishlistBadge");
+            badge.innerText = wishlist.length;
+            badge.classList.toggle("hidden", wishlist.length === 0);
+            renderBooks();
+            renderWishlistModal();
+        }
+
+        function toggleWishlistModal(open) {
+            const modal = document.getElementById("wishlistModal");
+            modal.classList.toggle("opacity-0", !open);
+            modal.classList.toggle("pointer-events-none", !open);
+            if (open) renderWishlistModal();
+        }
+
+        function renderWishlistModal() {
+            const container = document.getElementById("wishlistItemsContainer");
+            if (wishlist.length === 0) {
+                container.innerHTML = `<p class="text-xs text-stone-500 text-center py-6">Sua lista de desejos está vazia.</p>`;
+                return;
+            }
+            const list = books.filter(b => wishlist.includes(b.id));
+            container.innerHTML = list.map(b => `
+                <div class="flex items-center justify-between p-3 bg-stone-50 dark:bg-stone-800 rounded-2xl border border-stone-200 dark:border-stone-700">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-10 rounded overflow-hidden">${createSvgCover(b)}</div>
+                        <div>
+                            <h5 class="text-xs font-bold font-serif dark:text-white">${b.title}</h5>
+                            <span class="text-[10px] text-stone-400">R$ ${b.price.toFixed(2).replace('.', ',')}</span>
+                        </div>
+                    </div>
+                    <button onclick="addToCart(${b.id}); toggleWishlistModal(false)" class="px-3 py-1.5 bg-brand-burgundy text-white text-xs font-bold rounded-xl">Comprar</button>
+                </div>
+            `).join("");
+        }
+
+        function openCheckoutModal() {
+            toggleCartDrawer(false);
+            const modal = document.getElementById("checkoutModal");
+            modal.classList.remove("opacity-0", "pointer-events-none");
+            goToStep(1);
+        }
+
+        function closeCheckoutModal() {
+            const modal = document.getElementById("checkoutModal");
+            modal.classList.add("opacity-0", "pointer-events-none");
+        }
+
+        function goToStep(step) {
+            document.getElementById("checkoutStep1").classList.toggle("hidden", step !== 1);
+            document.getElementById("checkoutStep2").classList.toggle("hidden", step !== 2);
+            document.getElementById("checkoutStep3").classList.toggle("hidden", step !== 3);
+            
+            document.getElementById("stepTab1").className = step >= 1 ? "text-brand-burgundy dark:text-brand-gold border-b-2 border-brand-burgundy dark:border-brand-gold pb-1" : "pb-1";
+            document.getElementById("stepTab2").className = step >= 2 ? "text-brand-burgundy dark:text-brand-gold border-b-2 border-brand-burgundy dark:border-brand-gold pb-1" : "pb-1";
+            document.getElementById("stepTab3").className = step >= 3 ? "text-brand-burgundy dark:text-brand-gold border-b-2 border-brand-burgundy dark:border-brand-gold pb-1" : "pb-1";
+        }
+
+        function setPaymentMethod(method) {
+            document.getElementById("payPixBox").classList.toggle("hidden", method !== 'pix');
+            document.getElementById("payCardBox").classList.toggle("hidden", method !== 'card');
+            document.getElementById("payBoletoBox").classList.toggle("hidden", method !== 'boleto');
+        }
+
+        function copyPixCode() {
+            showToast("Código PIX copiado para a área de transferência!");
+        }
+
+        function finishOrder() {
+            closeCheckoutModal();
+            cart = [];
+            updateCartUI();
+            playSound('success');
+
+            // Fire celebration confetti!
+            try {
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+            } catch (e) {}
+
+            showToast("🎉 Compra realizada com sucesso! ID do Pedido: #" + Math.floor(100000 + Math.random() * 900000));
+        }
+
+        function selectPlan(plan) {
+            selectedBoxPlan = plan;
+            ['mensal', 'trimestral', 'anual'].forEach(p => {
+                const el = document.getElementById(`plan-${p}`);
+                if (p === plan) {
+                    el.className = "cursor-pointer border-2 border-brand-gold bg-brand-gold/10 p-4 rounded-2xl text-center transition-all hover:scale-105";
+                } else {
+                    el.className = "cursor-pointer border border-stone-700 bg-stone-800/60 p-4 rounded-2xl text-center transition-all hover:scale-105";
+                }
+            });
+        }
+
+        function subscribeClub() {
+            playSound('success');
+            showToast(`Assinatura do Plano ${selectedBoxPlan.toUpperCase()} confirmada!`);
+        }
+
+        /* Reader Quiz Engine */
+        const quizQuestions = [
+            {
+                title: "Qual o seu ritmo e local preferido para ler?",
+                options: [
+                    { label: "Quietude de um café no sábado", cat: "Ficção" },
+                    { label: "Na cama antes de dormir com luz suave", cat: "Romance" },
+                    { label: "No transporte ou viagens buscando focar", cat: "Desenvolvimento Pessoal" },
+                    { label: "Num canto secreto com uma xícara de chá", cat: "Sci-Fi & Fantasia" }
+                ]
+            }
+        ];
+
+        function openQuizModal() {
+            const modal = document.getElementById("quizModal");
+            modal.classList.remove("opacity-0", "pointer-events-none");
+            
+            const q = quizQuestions[0];
+            document.getElementById("quizQuestionTitle").innerText = q.title;
+            document.getElementById("quizOptions").innerHTML = q.options.map(o => `
+                <button onclick="finishQuiz('${o.cat}')" class="w-full p-4 rounded-2xl bg-stone-100 dark:bg-stone-800 hover:bg-brand-gold hover:text-stone-900 font-bold text-xs text-left transition-all flex justify-between items-center">
+                    <span>${o.label}</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            `).join("");
+        }
+
+        function finishQuiz(recommendedCat) {
+            closeQuizModal();
+            filterCategory(recommendedCat);
+            showToast(`Perfil identificado! Filtramos livros de ${recommendedCat} para você.`);
+        }
+
+        function closeQuizModal() {
+            const modal = document.getElementById("quizModal");
+            modal.classList.add("opacity-0", "pointer-events-none");
+        }
+
+        /* Theme Toggle */
+        function toggleDarkMode() {
+            document.documentElement.classList.toggle("dark");
+            showToast(document.documentElement.classList.contains("dark") ? "Modo escuro ativado" : "Modo claro ativado");
+        }
+
+        /* Toast Helper */
+        function showToast(msg) {
+            const container = document.getElementById("toastContainer");
+            const toast = document.createElement("div");
+            toast.className = "bg-stone-900 text-brand-gold border border-brand-gold/40 text-xs font-semibold px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-2 pointer-events-auto transform translate-y-2 opacity-0 transition-all duration-300";
+            toast.innerHTML = `<i class="fa-solid fa-bookmark"></i> <span>${msg}</span>`;
+
+            container.appendChild(toast);
+
+            requestAnimationFrame(() => {
+                toast.classList.remove("translate-y-2", "opacity-0");
+            });
+
+            setTimeout(() => {
+                toast.classList.add("opacity-0", "translate-y-2");
+                setTimeout(() => toast.remove(), 300);
+            }, 3200);
+        }
+    </script>
+</body>
+</html>
